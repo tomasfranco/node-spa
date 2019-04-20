@@ -1,4 +1,5 @@
 const restify = require('restify');
+const errs = require('restify-errors');
 
 const server = restify.createServer({
   name: 'myapp',
@@ -43,3 +44,48 @@ server.post('/create', function (req, res, next) {
     }, next);
 
 });
+
+server.get('/show/:id', function (req, res, next) {
+  const { id } = req.params;
+  knex('rest')
+  .where('id',id)
+  .first()
+  .then((dados)=> {
+
+      if (!dados) return res.send(new errs.BadRequestError('nada foi encontrado'))
+
+      res.send(dados);
+
+  }, next);
+
+  });
+
+  server.put('/update/:id', function (req, res, next) {
+    const { id } = req.params;
+    knex('rest')
+    .where('id',id)
+    .update(req.body)
+    .then((dados)=> {
+  
+        if (!dados) return res.send(new errs.BadRequestError('nada foi encontrado'))
+  
+        res.send('Dados atualizados com sucesso!');
+  
+    }, next);
+          
+    });
+
+    server.del('/delete/:id', function (req, res, next) {
+      const { id } = req.params;
+      knex('rest')
+      .where('id',id)
+      .delete()
+      .then((dados)=> {
+    
+          if (!dados) return res.send(new errs.BadRequestError('nada foi encontrado'))
+    
+          res.send('Dados excluídos com sucesso!');
+    
+      }, next);
+            
+      });
