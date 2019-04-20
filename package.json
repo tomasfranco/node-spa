@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/tomasfranco/node-spa#readme",
   "dependencies": {
-    "restify": "^8.3.0"
+    "restify": "^8.3.0",
+    "restify-errors": "^7.0.0"
   }
 }
