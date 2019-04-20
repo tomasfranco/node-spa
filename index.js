@@ -26,73 +26,66 @@ server.listen(8080, function () {
 
 // Rotas Rest
 
-server.get('/', restify.plugins.serverStatic({
-  directory: '.dist',
-  file: 'index.html'
+server.get('/', restify.plugins.serveStatic({
+  directory: './dist',
+  file:'index.html'
 }));
 
-server.get('/read', function (req, res, next) {
+server.get('/read', (req, res, next) => {
 
-knex('rest').then((dados)=> {
+    knex('rest').then((dados)=> {
     res.send(dados);
-}, next);
+    }, next)  
 
-  
-  return next();
 });
 
-server.post('/create', function (req, res, next) {
+server.post('/create', (req, res, next) => {
   
   knex('rest')
     .insert(req.body)
-    .then((dados) =>{
-      res.send(dados);
-      
-    }, next);
+    .then((dados) => {
+      res.send(dados);      
+    }, next)
 
 });
 
-server.get('/show/:id', function (req, res, next) {
-  const { id } = req.params;
-  knex('rest')
-  .where('id',id)
-  .first()
-  .then((dados)=> {
+server.get('/show/:id',(req, res, next) => {
 
-      if (!dados) return res.send(new errs.BadRequestError('nada foi encontrado'))
+    const { id } = req.params;
 
-      res.send(dados);
-
-  }, next);
+    knex('rest')
+      .where('id', id)
+      .first()
+      .then((dados)=> {
+          if(!dados) return res.send(new errs.BadRequestError('nada foi encontrado'))
+          res.send(dados);
+      }, next)
 
   });
 
-  server.put('/update/:id', function (req, res, next) {
+  server.put('/update/:id', (req, res, next) => {
+
     const { id } = req.params;
+
     knex('rest')
-    .where('id',id)
-    .update(req.body)
-    .then((dados)=> {
-  
-        if (!dados) return res.send(new errs.BadRequestError('nada foi encontrado'))
-  
-        res.send('Dados atualizados com sucesso!');
-  
-    }, next);
-          
+      .where('id',id)
+      .update(req.body)
+      .then((dados)=> {  
+          if(!dados) return res.send(new errs.BadRequestError('nada foi encontrado'))  
+          res.send('Dados atualizados com sucesso!');  
+        }, next)          
     });
 
-    server.del('/delete/:id', function (req, res, next) {
+    server.del('/delete/:id', (req, res, next) => {
+
       const { id } = req.params;
+
       knex('rest')
-      .where('id',id)
-      .delete()
-      .then((dados)=> {
+        .where('id',id)
+        .delete()
+        .then((dados)=> {
     
-          if (!dados) return res.send(new errs.BadRequestError('nada foi encontrado'))
-    
-          res.send('Dados excluídos com sucesso!');
-    
-      }, next);
-            
+          if(!dados) return res.send(new errs.BadRequestError('nada foi encontrado'))    
+          res.send('Dados excluídos com sucesso!');    
+      }, next)            
       });
