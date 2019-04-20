@@ -19,11 +19,27 @@ server.use(restify.plugins.acceptParser(server.acceptable));
 server.use(restify.plugins.queryParser());
 server.use(restify.plugins.bodyParser());
 
-server.get('/echo/:name', function (req, res, next) {
-  res.send(req.params);
+server.listen(8080, function () {
+  console.log('%s listening at %s', server.name, server.url);
+});
+
+server.get('/', function (req, res, next) {
+
+knex('rest').then((dados)=> {
+    res.send(dados);
+}, next);
+
+  
   return next();
 });
 
-server.listen(8080, function () {
-  console.log('%s listening at %s', server.name, server.url);
+server.post('/create', function (req, res, next) {
+  
+  knex('rest')
+    .insert(req.body)
+    .then((dados) =>{
+      res.send(dados);
+      
+    }, next);
+
 });
