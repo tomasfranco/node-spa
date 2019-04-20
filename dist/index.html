@@ -85,7 +85,7 @@ function templateLi(id, nome, element = true) {
       axios.post('/create', {name})
         .then(function(response) {
           console.log(response);
-          lista.innerHTML += templateLi(responde.data[0], name);
+          lista.innerHTML += templateLi(response.data[0], name);
         })
         .catch(function (error) {
           console.log(error);
